@@ -1,5 +1,5 @@
-get http://localhost:4321/api/personas/1
-Accept: application/xml
+get http://localhost:4321/api/personas?_page=0&_rows=10
+Accept: application/application/json
 
 ###
 put http://localhost:4321/api/personas/1
@@ -9,9 +9,54 @@ Content-Type: application/json
   "id": 2,
   "nombre": "CARMELO",
   "apellidos": "Coton",
-  "edad": 37,
+  "edad": 99,
   "telefono": [
     "123 424 435",
     "555 000 111"
   ]
 }
+
+###
+PATCH http://localhost:4321/api/personas/1
+Content-Type: application/json
+
+{
+  "edad": 99
+}
+
+###
+http://localhost:8010/actores/v1?page=0&size=10
+Accept: image/gif, application/json
+
+###
+get http://localhost:8010/actores/v1/1?mode=edit
+Accept: image/gif, application/json
+
+###
+post http://localhost:8010/actores/v1/1
+Content-Type: application/json
+
+{
+  "id": 0,
+  "nombre": "PENELOPE",
+  "apellidos": "GUINESS"
+}
+
+###
+put http://localhost:8010/actores/v1
+Content-Type: application/json
+
+{
+  "id": 0,
+  "nombre": "PENELOPE",
+  "apellidos": "GUINESS"
+}
+
+###
+OPTIONS http://localhost:8010/actores/v1/1
+
+###
+OPTIONS https://picsum.photos/v2/list
+
+###
+GET https://picsum.photos/id/0/info
