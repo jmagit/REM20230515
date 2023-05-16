@@ -1,15 +1,20 @@
 get http://localhost:4321/api/personas?_page=0&_rows=10
 Accept: application/application/json
+###
+get http://localhost:4321/api/personas/1
+If-None-Match: W/"62-extGHx9JRp2TTb2GQfY3+W6GW+Y"
+
 
 ###
 put http://localhost:4321/api/personas/1
+If-Match: W/"62-extGHx9JRp2TTb2GQfY3+W6GW+Y"
 Content-Type: application/json
 
 {
-  "id": 2,
-  "nombre": "CARMELO",
+  "id": 1,
+  "nombre": "Carmelo",
   "apellidos": "Coton",
-  "edad": 99,
+  "edad": 34,
   "telefono": [
     "123 424 435",
     "555 000 111"
@@ -30,6 +35,10 @@ Accept: image/gif, application/json
 
 ###
 get http://localhost:8010/actores/v1/1?mode=edit
+Accept: image/gif, application/json
+
+###
+get http://localhost:8010/actores/v1/1/pelis
 Accept: image/gif, application/json
 
 ###
@@ -60,3 +69,12 @@ OPTIONS https://picsum.photos/v2/list
 
 ###
 GET https://picsum.photos/id/0/info
+
+###
+get http://localhost:8010/peliculas/v1/1?mode=details
+
+###
+get http://localhost:8010/peliculas/v1/1?mode=edit
+
+###
+get http://localhost:8010/peliculas/v1/1?mode=short
