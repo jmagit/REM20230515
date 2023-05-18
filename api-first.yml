@@ -1,0 +1,537 @@
+openapi: 3.0.3
+
+info:
+  title: Server API REST
+  version: 2.0.0
+  description: Api que permite la gestión de servidores
+  contact:
+    name: Javier Martín
+    url: https://github.com/jmagit
+    email: support@example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: "{protocol}://localhost:{port}"
+    description: Servidor local para las pruebas
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      port:
+        enum:
+          - "8080"
+          - "8088"
+        default: "8080"
+  - url: "https://example.com:8181"
+    description: Servidor publico de producción
+tags:
+  - name: server-api
+    description: Mantenimiento de servidores
+paths:
+  /:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/APIResources'
+  /servidores:
+    get:
+      tags:
+        - server-api
+      summary: Listar servidores
+      parameters:
+        - $ref: "#/components/parameters/pagina"
+        - $ref: "#/components/parameters/filas"
+        - $ref: "#/components/parameters/ordenar"
+        - $ref: "#/components/parameters/buscar"
+        - $ref: "#/components/parameters/proyeccion"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/servidores"
+                  - $ref: "#/components/schemas/servidores-paginados"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags:
+        - server-api
+      summary: Crear servidor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/servidor-completo"
+        required: true
+      responses:
+        "201":
+          $ref: "#/components/responses/Created"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    options:
+      tags:
+        - server-api
+      summary: Sondeo CORS
+      responses:
+        "200":
+          description: OK
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  "/servidores/{id}":
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Identificador del recurso
+        schema:
+          type: integer
+    get:
+      tags:
+        - server-api
+      summary: Recuperar servidor
+      parameters:
+        - $ref: "#/components/parameters/proyeccion"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/servidor-completo"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      tags:
+        - server-api
+      summary: Reemplazar servidor
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/servidor-completo"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/servidor-completo"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    options:
+      tags:
+        - server-api
+      summary: Sondeo CORS
+      responses:
+        "200":
+          description: OK
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    delete:
+      tags:
+        - server-api
+      summary: Borrar servidor
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  schemas:
+    servidores-paginados:
+      type: object
+      title: Lista paginada de servidores
+      properties:
+        content:
+          $ref: "#/components/schemas/servidores"
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    servidores:
+      title: Lista de servidores
+      type: array
+      items:
+        oneOf:
+          - $ref: '#/components/schemas/servidor-minimo'
+          - $ref: '#/components/schemas/servidor-completo'
+      example:
+      - serverId: 1
+        domain: zdnet.com
+        description: >-
+          Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula
+          condimentum.
+
+
+          Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.
+
+
+          Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.
+        ip: 218.74.101.245
+        mac: 35-43-2B-F3-44-E8
+        notify: sszymon0@blogs.com
+        country: ID
+        last_updated: 2022-06-30T07:18:01Z
+      - serverId: 2
+        domain: globo.com
+        description: >-
+          Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in
+          porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue
+          elementum.
+
+
+          In hac habitasse platea dictumst. Morbi vestibulum, velit id pretium iaculis, diam erat fermentum justo, nec condimentum neque sapien placerat ante. Nulla justo.
+        ip: 180.120.60.73
+        mac: 45-F3-CD-78-32-7A
+        notify: grhymes1@prweb.com
+        country: JP
+        last_updated: 2022-08-30T06:20:41Z
+      - serverId: 3
+        domain: cam.ac.uk
+        description: >-
+          Fusce consequat. Nulla nisl. Nunc nisl.
+
+
+          Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.
+        ip: 208.86.21.8
+        mac: 4E-A1-AE-19-7C-FB
+        notify: hhowgate2@indiatimes.com
+        country: CN
+        last_updated: 2023-03-30T14:08:17Z
+      - serverId: 4
+        domain: wikispaces.com
+        description: >-
+          Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam
+          augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.
+
+
+          Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.
+        ip: 31.211.56.143
+        mac: 5F-32-CE-1A-0D-EF
+        notify: ddavidge3@bloomberg.com
+        country: CN
+        last_updated: 2023-05-11T18:51:03Z
+      - serverId: 5
+        domain: ask.com
+        description: >-
+          Duis aliquam convallis nunc. Proin at turpis a pede posuere nonummy. Integer
+          non velit.
+
+
+          Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac neque.
+        ip: 177.141.248.20
+        mac: B0-EC-38-C8-77-E8
+        notify: adimsdale4@cmu.edu
+        country: PL
+        last_updated: 2022-10-03T16:50:03Z
+      - serverId: 6
+        domain: t-online.de
+        description:
+          Vestibulum quam sapien, varius ut, blandit non, interdum in, ante.
+          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+          cubilia Curae; Duis faucibus accumsan odio. Curabitur convallis.
+        ip: 43.146.38.211
+        mac: CF-00-8E-00-D0-53
+        notify: ghuckell5@theatlantic.com
+        country: PH
+        last_updated: 2022-07-10T15:52:34Z
+      - serverId: 7
+        domain: i2i.jp
+        description: >-
+          Donec diam neque, vestibulum eget, vulputate ut, ultrices vel, augue.
+          Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+          cubilia Curae; Donec pharetra, magna vestibulum aliquet ultrices, erat
+          tortor sollicitudin mi, sit amet lobortis sapien sapien non mi. Integer ac
+          neque.
+
+
+          Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.
+
+
+          In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.
+        ip: 214.202.165.179
+        mac: 18-A3-38-94-40-6D
+        notify: zpierri6@histats.com
+        country: RU
+        last_updated: 2022-12-21T12:59:03Z
+      - serverId: 8
+        domain: gizmodo.com
+        description: >-
+          Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum.
+          Integer a nibh.
+
+
+          In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.
+        ip: 170.255.136.50
+        mac: 5A-26-A7-20-50-EB
+        notify: mconachie7@tinypic.com
+        country: CN
+        last_updated: 2022-08-12T11:20:09Z
+      - serverId: 9
+        domain: theatlantic.com
+        description: >-
+          Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.
+
+
+          In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.
+        ip: 46.139.207.155
+        mac: FA-50-2B-4D-CC-54
+        notify: vtomowicz8@github.io
+        country: CN
+        last_updated: 2023-02-13T10:01:49Z
+      - serverId: 10
+        domain: prnewswire.com
+        description: Morbi porttitor lorem id ligula. Suspendisse ornare consequat
+          lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.
+        ip: 167.33.254.146
+        mac: 0F-54-E2-A5-96-A1
+        notify: lantognetti9@drupal.org
+        country: NO
+        last_updated: 2023-05-07T19:33:43Z
+
+    servidor-minimo:
+      title: Breve detalle del servidor
+      type: object
+      properties:
+        serverId:
+          type: number
+          format: int32
+          minimum: 0
+        domain:
+          type: string
+          minLength: 5
+          maxLength: 100
+      example:
+        serverId: 6
+        domain: nifty.com
+    servidor-completo:
+      title: Datos completos del servidor
+      type: object
+      properties:
+        serverId:
+          type: number
+          format: int32
+          minimum: 0
+        domain:
+          type: string
+          minLength: 5
+          maxLength: 100
+        description:
+          type: string
+        ip:
+          type: string
+          format: ipv4
+        mac:
+          type: string
+        notify:
+          type: string
+          format: email
+        country:
+          type: string
+          minLength: 2
+          maxLength: 2
+        last_updated:
+          type: string
+          format: dateTime
+          readOnly: true
+      required:
+        - serverId
+        - domain
+        - description
+        - ip
+        - mac
+        - notify
+        - country
+      example:
+        serverId: 6
+        domain: nifty.com
+        description: Cum sociis natoque penatibus et magnis dis parturient montes,
+          nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque
+          penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+        ip: 198.56.202.237
+        mac: 2B-85-5A-39-CB-C8
+        notify: eshovelbottom5@sbwire.com
+        country: PT
+        last_updated: 2022-10-29T15:53:29Z
+    ErrorMessage:
+      type: object
+      title: Detalles del error
+      externalDocs:
+        url: https://www.rfc-editor.org/rfc/rfc7807.html
+      required:
+        - type
+        - status
+        - title
+      properties:
+        type:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        detail:
+          type: string
+        source:
+          type: string
+    APILinks:
+      type: object
+      properties:
+        self:
+          $ref: '#/components/schemas/Href'
+        servidores:
+          $ref: '#/components/schemas/Href'
+      example:
+        self: '/'
+        servidores: '/servidores/v1'
+    APIResources:
+      type: object
+      properties:
+        get_links:
+          $ref: '#/components/schemas/APILinks'
+    Href:
+      type: object
+      properties:
+        href:
+          type: string
+  responses:
+    Created:
+      description: Created
+      headers:
+        location:
+          description: URL al elemento recién creado
+          schema:
+            type: string
+            format: uri
+    NoContent:
+      description: No content
+    BadRequest:
+      description: Invalid data
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessage"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessage"
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessage"
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorMessage"
+  parameters:
+    pagina:
+      in: query
+      name: _page
+      description: Número de página empezando en 0 (primera página).
+      required: false
+      schema:
+        oneOf:
+          - type: integer
+            minimum: 0
+          - type: string
+            enum:
+              - count
+              - COUNT
+    filas:
+      in: query
+      name: _rows
+      description: Número de filas por página, por defecto 20 si se omite pero aparece
+        el parámetro *_page*.
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+    ordenar:
+      in: query
+      name: _sort
+      description: Indica la lista de propiedades (separadas por comas) por la que se
+        ordenaran los resultados, en caso de omitirse se utilizará la propiedad
+        que actúa como primary key. Si el nombre de la propiedad está precedido
+        por un guion (signo negativo) la ordenación será descendente.
+      required: false
+      allowReserved: true
+      schema:
+        type: string
+    buscar:
+      in: query
+      name: _search
+      description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+        el valor proporcionado.
+      required: false
+      allowReserved: true
+      schema:
+        type: string
+    proyeccion:
+      in: query
+      name: _projection
+      description: Devuelve solo aquellas propiedades de la lista suministrada, los
+        nombres de las propiedades deben ir separadas por comas.
+      required: false
+      allowReserved: true
+      schema:
+        type: string
+  
