@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "70a00fe5-d3bd-4d0a-a4e2-2a556b365994",
+		"name": "Autenticados",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8273928",
+		"_collection_link": "https://www.postman.com/red-flare-4265/workspace/cursov/collection/8273928-70a00fe5-d3bd-4d0a-a4e2-2a556b365994?action=share&creator=8273928&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Con cabecera Authorization",
+			"item": [
+				{
+					"name": "smoke",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if(pm.response.code !== 200 || !pm.response.json().isAuthenticated) {\r",
+									"    postman.setNextRequest(null);\r",
+									"    pm.expect.fail('No se ha autenticado')\r",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4321/auth",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4321/auth",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "libros",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4321/api/libros",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"api",
+								"libros"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{token}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "Authorization",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.collectionVariables.unset(\"token\")",
+							"const postRequest = {",
+							"  url: pm.collectionVariables.get(\"url_login\"),",
+							"  method: 'POST',",
+							"  header: {'Content-Type': 'application/json'},",
+							"  body: { mode: 'raw', raw: `{ \"username\": \"${pm.variables.get(\"user\")}\", \"password\": \"${pm.variables.get(\"password\")}\" }` }",
+							"};",
+							"pm.sendRequest(postRequest, (error, response) => {",
+							"  pm.collectionVariables.set(\"token\", response.json().token);",
+							"});",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Sin cabecera Authorization",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// console.log(pm.response.json().token)\r",
+									"pm.collectionVariables.set('token', pm.response.json().token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"{{user}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4321/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "auth",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4321/auth",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "url_login",
+			"value": "http://localhost:4321/login",
+			"type": "string"
+		}
+	]
+}
