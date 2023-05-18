@@ -1,0 +1,20 @@
+{
+  "name": "mock-web-server",
+  "version": "2.0.0",
+  "description": "Versión NodeJS del **servidor de pruebas** para cursos de FrontEnd.",
+  "main": "index.js",
+  "scripts": {
+	"prestart": "npm install",
+	"start": "node index.js"
+  },
+  "keywords": [
+    "swagger"
+  ],
+  "license": "Unlicense",
+  "private": true,
+  "dependencies": {
+    "connect": "^3.2.0",
+    "js-yaml": "^3.3.0",
+    "oas3-tools": "^2.2.3"
+  }
+}

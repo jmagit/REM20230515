@@ -1,0 +1,4338 @@
+openapi: 3.0.0
+info:
+  title: MOCK Web Server
+  description: Versión NodeJS del **servidor de pruebas** para cursos de FrontEnd.
+  contact:
+    name: Javier Martín
+    url: https://github.com/jmagit
+    email: support@example.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 2.0.0
+externalDocs:
+  description: Repositorio del proyecto
+  url: https://github.com/jmagit/MOCKWebServer
+servers:
+- url: "{protocol}://localhost:{port}/"
+  description: Servidor local para las pruebas
+  variables:
+    protocol:
+      default: http
+      enum:
+      - http
+      - https
+    port:
+      default: "4321"
+      enum:
+      - "4321"
+      - "8181"
+tags:
+- name: autenticación
+  description: Login
+- name: registro
+  description: Cuentas de usuarios
+- name: personas
+  description: Mantenimiento de personas
+- name: tarjetas
+  description: Mantenimiento de tarjetas
+- name: blog
+  description: Mantenimiento de blog
+- name: libros
+  description: Mantenimiento de libros
+- name: biblioteca
+  description: Mantenimiento de biblioteca
+- name: vehiculos
+  description: Mantenimiento de vehiculos
+paths:
+  /api/contactos:
+    get:
+      tags:
+      - contactos
+      summary: Listar contactos
+      operationId: apiContactosGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Contactos
+    post:
+      tags:
+      - contactos
+      summary: Crear contacto
+      operationId: apiContactosPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactoModel'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            location:
+              description: URL al elemento recién creado
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Contactos
+    options:
+      tags:
+      - contactos
+      summary: Sondeo CORS
+      operationId: apiContactosOPTIONS
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Contactos
+  /api/contactos/{id}:
+    get:
+      tags:
+      - contactos
+      summary: Recuperar contacto
+      operationId: apiContactosIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactoProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Contactos
+    put:
+      tags:
+      - contactos
+      summary: Reemplazar contacto
+      operationId: apiContactosIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactoModel'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactoProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Contactos
+    delete:
+      tags:
+      - contactos
+      summary: Borrar contacto
+      operationId: apiContactosIdDELETE
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Contactos
+    options:
+      tags:
+      - contactos
+      summary: Sondeo CORS
+      operationId: apiContactosIdOPTIONS
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Contactos
+    patch:
+      tags:
+      - contactos
+      summary: Actualizar parcialmente contacto
+      operationId: apiContactosIdPATCH
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactoProjection'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactoProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Contactos
+  /api/peliculas:
+    get:
+      tags:
+      - peliculas
+      summary: Listar peliculas
+      operationId: apiPeliculasGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Peliculas
+    post:
+      tags:
+      - peliculas
+      summary: Crear pelicula
+      operationId: apiPeliculasPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeliculaModel'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            location:
+              description: URL al elemento recién creado
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Peliculas
+    options:
+      tags:
+      - peliculas
+      summary: Sondeo CORS
+      operationId: apiPeliculasOPTIONS
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Peliculas
+  /api/peliculas/{id}:
+    get:
+      tags:
+      - peliculas
+      summary: Recuperar pelicula
+      operationId: apiPeliculasIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeliculaProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Peliculas
+    put:
+      tags:
+      - peliculas
+      summary: Reemplazar pelicula
+      operationId: apiPeliculasIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeliculaModel'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeliculaProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Peliculas
+    delete:
+      tags:
+      - peliculas
+      summary: Borrar pelicula
+      operationId: apiPeliculasIdDELETE
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Peliculas
+    options:
+      tags:
+      - peliculas
+      summary: Sondeo CORS
+      operationId: apiPeliculasIdOPTIONS
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Peliculas
+    patch:
+      tags:
+      - peliculas
+      summary: Actualizar parcialmente pelicula
+      operationId: apiPeliculasIdPATCH
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PeliculaProjection'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PeliculaProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Peliculas
+  /api/personas:
+    get:
+      tags:
+      - personas
+      summary: Listar personas
+      operationId: apiPersonasGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Personas
+    post:
+      tags:
+      - personas
+      summary: Crear persona
+      operationId: apiPersonasPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaModel'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            location:
+              description: URL al elemento recién creado
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Personas
+  /api/personas/{id}:
+    get:
+      tags:
+      - personas
+      summary: Recuperar persona
+      operationId: apiPersonasIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Personas
+    put:
+      tags:
+      - personas
+      summary: Reemplazar persona
+      operationId: apiPersonasIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonaModel'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonaProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Personas
+    delete:
+      tags:
+      - personas
+      summary: Borrar persona
+      operationId: apiPersonasIdDELETE
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Personas
+  /api/tarjetas:
+    get:
+      tags:
+      - tarjetas
+      summary: Listar tarjetas
+      operationId: apiTarjetasGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Tarjetas
+    post:
+      tags:
+      - tarjetas
+      summary: Crear tarjeta
+      operationId: apiTarjetasPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TarjetaModel'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            location:
+              description: URL al elemento recién creado
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Tarjetas
+  /api/tarjetas/{id}:
+    get:
+      tags:
+      - tarjetas
+      summary: Recuperar tarjeta
+      operationId: apiTarjetasIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TarjetaProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Tarjetas
+    put:
+      tags:
+      - tarjetas
+      summary: Reemplazar tarjeta
+      operationId: apiTarjetasIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TarjetaModel'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TarjetaProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Tarjetas
+  /api/blog:
+    get:
+      tags:
+      - blog
+      summary: Listar blog
+      operationId: apiBlogGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Blog
+    post:
+      tags:
+      - blog
+      summary: Crear articulo
+      operationId: apiBlogPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticuloModel'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            location:
+              description: URL al elemento recién creado
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Blog
+    options:
+      tags:
+      - blog
+      summary: Sondeo CORS
+      operationId: apiBlogOPTIONS
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Blog
+  /api/blog/{id}:
+    get:
+      tags:
+      - blog
+      summary: Recuperar articulo
+      operationId: apiBlogIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticuloProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Blog
+    put:
+      tags:
+      - blog
+      summary: Reemplazar articulo
+      operationId: apiBlogIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticuloModel'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticuloProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Blog
+    delete:
+      tags:
+      - blog
+      summary: Borrar articulo
+      operationId: apiBlogIdDELETE
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Blog
+    options:
+      tags:
+      - blog
+      summary: Sondeo CORS
+      operationId: apiBlogIdOPTIONS
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Blog
+    patch:
+      tags:
+      - blog
+      summary: Actualizar parcialmente articulo
+      operationId: apiBlogIdPATCH
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticuloProjection'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticuloProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Blog
+  /api/libros:
+    get:
+      tags:
+      - libros
+      summary: Listar libros
+      operationId: apiLibrosGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Libros
+    post:
+      tags:
+      - libros
+      summary: Crear libro
+      operationId: apiLibrosPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibroModel'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            location:
+              description: URL al elemento recién creado
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Libros
+    options:
+      tags:
+      - libros
+      summary: Sondeo CORS
+      operationId: apiLibrosOPTIONS
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Libros
+  /api/libros/{id}:
+    get:
+      tags:
+      - libros
+      summary: Recuperar libro
+      operationId: apiLibrosIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibroProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Libros
+    put:
+      tags:
+      - libros
+      summary: Reemplazar libro
+      operationId: apiLibrosIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibroModel'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibroProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Libros
+    delete:
+      tags:
+      - libros
+      summary: Borrar libro
+      operationId: apiLibrosIdDELETE
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Libros
+    options:
+      tags:
+      - libros
+      summary: Sondeo CORS
+      operationId: apiLibrosIdOPTIONS
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Libros
+    patch:
+      tags:
+      - libros
+      summary: Actualizar parcialmente libro
+      operationId: apiLibrosIdPATCH
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LibroProjection'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LibroProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Libros
+  /api/biblioteca:
+    get:
+      tags:
+      - biblioteca
+      summary: Listar biblioteca
+      operationId: apiBibliotecaGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Biblioteca
+    post:
+      tags:
+      - biblioteca
+      summary: Crear volumen
+      operationId: apiBibliotecaPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VolumenModel'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            location:
+              description: URL al elemento recién creado
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Biblioteca
+    options:
+      tags:
+      - biblioteca
+      summary: Sondeo CORS
+      operationId: apiBibliotecaOPTIONS
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Biblioteca
+  /api/biblioteca/{id}:
+    get:
+      tags:
+      - biblioteca
+      summary: Recuperar volumen
+      operationId: apiBibliotecaIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VolumenProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Biblioteca
+    put:
+      tags:
+      - biblioteca
+      summary: Reemplazar volumen
+      operationId: apiBibliotecaIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VolumenModel'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VolumenProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Biblioteca
+    delete:
+      tags:
+      - biblioteca
+      summary: Borrar volumen
+      operationId: apiBibliotecaIdDELETE
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Biblioteca
+    options:
+      tags:
+      - biblioteca
+      summary: Sondeo CORS
+      operationId: apiBibliotecaIdOPTIONS
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Biblioteca
+    patch:
+      tags:
+      - biblioteca
+      summary: Actualizar parcialmente volumen
+      operationId: apiBibliotecaIdPATCH
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VolumenProjection'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VolumenProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Biblioteca
+  /api/vehiculos:
+    get:
+      tags:
+      - vehiculos
+      summary: Listar vehiculos
+      operationId: apiVehiculosGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Vehiculos
+    post:
+      tags:
+      - vehiculos
+      summary: Crear vehiculo
+      operationId: apiVehiculosPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehiculoModel'
+        required: true
+      responses:
+        "201":
+          description: Created
+          headers:
+            location:
+              description: URL al elemento recién creado
+              style: simple
+              explode: false
+              schema:
+                type: string
+                format: uri
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Vehiculos
+    options:
+      tags:
+      - vehiculos
+      summary: Sondeo CORS
+      operationId: apiVehiculosOPTIONS
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Vehiculos
+  /api/vehiculos/{id}:
+    get:
+      tags:
+      - vehiculos
+      summary: Recuperar vehiculo
+      operationId: apiVehiculosIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehiculoProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Vehiculos
+    put:
+      tags:
+      - vehiculos
+      summary: Reemplazar vehiculo
+      operationId: apiVehiculosIdPUT
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehiculoModel'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehiculoProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Vehiculos
+    delete:
+      tags:
+      - vehiculos
+      summary: Borrar vehiculo
+      operationId: apiVehiculosIdDELETE
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "204":
+          description: No content
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Vehiculos
+    options:
+      tags:
+      - vehiculos
+      summary: Sondeo CORS
+      operationId: apiVehiculosIdOPTIONS
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Vehiculos
+    patch:
+      tags:
+      - vehiculos
+      summary: Actualizar parcialmente vehiculo
+      operationId: apiVehiculosIdPATCH
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VehiculoProjection'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehiculoProjection'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Vehiculos
+  /api/marcas:
+    get:
+      tags:
+      - vehiculos
+      summary: Listar marcas
+      operationId: apiMarcasGET
+      parameters:
+      - name: _page
+        in: query
+        description: Número de página empezando en 0 (primera página).
+        required: false
+        style: form
+        explode: true
+        schema:
+          $ref: '#/components/schemas/_page'
+      - name: _rows
+        in: query
+        description: "Número de filas por página, por defecto 20 si se omite pero\
+          \ aparece el parámetro *_page*."
+        required: false
+        style: form
+        explode: true
+        schema:
+          minimum: 0
+          type: integer
+      - name: _sort
+        in: query
+        description: "Indica la lista de propiedades (separadas por comas) por la\
+          \ que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+          \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+          \ por un guion (signo negativo) la ordenación será descendente."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _search
+        in: query
+        description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+          el valor proporcionado.
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        allowReserved: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Vehiculos
+  /api/marcas/{id}:
+    get:
+      tags:
+      - vehiculos
+      summary: Recuperar marca
+      operationId: apiMarcasIdGET
+      parameters:
+      - name: id
+        in: path
+        description: Identificador del recurso
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: _projection
+        in: query
+        description: "Devuelve solo aquellas propiedades de la lista suministrada,\
+          \ los nombres de las propiedades deben ir separadas por comas."
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarcaProjection'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Vehiculos
+  /login:
+    post:
+      tags:
+      - autenticación
+      summary: Iniciar sesión
+      operationId: loginPOST
+      parameters:
+      - name: cookie
+        in: query
+        description: true para que genere y envíe la cookie
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/login_body'
+        required: true
+      responses:
+        "200":
+          description: Resultado de la autenticación
+          headers:
+            Set-Cookie:
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespuestaLogin'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Autenticacin
+    options:
+      tags:
+      - autenticación
+      summary: Sondeo CORS
+      operationId: loginOPTIONS
+      responses:
+        "200":
+          description: OK
+      x-swagger-router-controller: Autenticacin
+  /login/refresh:
+    post:
+      tags:
+      - autenticación
+      summary: Volver a iniciar sesión con el token de refresco
+      operationId: loginRefreshPOST
+      parameters:
+      - name: cookie
+        in: query
+        description: true para que genere y envíe la cookie
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+        required: true
+      responses:
+        "200":
+          description: Resultado de la autenticación
+          headers:
+            Set-Cookie:
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespuestaLogin'
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Autenticacin
+  /login/signature:
+    get:
+      tags:
+      - autenticación
+      summary: Clave publica para validar el token JWT
+      operationId: loginSignatureGET
+      responses:
+        "200":
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                x-content-type: text/plain
+      x-swagger-router-controller: Autenticacin
+  /logout:
+    post:
+      tags:
+      - autenticación
+      summary: Cerrar sesión
+      operationId: logoutPOST
+      responses:
+        "200":
+          description: OK
+      x-swagger-router-controller: Autenticacin
+  /register:
+    get:
+      tags:
+      - registro
+      summary: Consultar su usuario
+      operationId: registerGET
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_9'
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Registro
+    put:
+      tags:
+      - registro
+      summary: Modificar el nombre de su usuario
+      operationId: registerPUT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/register_body'
+        required: true
+      responses:
+        "204":
+          description: No content
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Registro
+    post:
+      tags:
+      - registro
+      summary: Registrar un nuevo usuario
+      operationId: registerPOST
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/register_body_1'
+        required: true
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      x-swagger-router-controller: Registro
+  /auth:
+    get:
+      tags:
+      - autenticación
+      summary: Obtener estado de sesión
+      operationId: authGET
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_10'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Autenticacin
+  /register/password:
+    put:
+      tags:
+      - registro
+      summary: Cambiar su contraseña
+      description: Es necesario conocer la contraseña actual antes de cambiarla
+      operationId: registerPasswordPUT
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/register_password_body'
+        required: true
+      responses:
+        "204":
+          description: No content
+        "400":
+          description: Invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+      security:
+      - bearerAuth: []
+      - cookieAuth: []
+      x-swagger-router-controller: Registro
+components:
+  schemas:
+    ErrorMessage:
+      title: Error message
+      required:
+      - status
+      - title
+      - type
+      type: object
+      properties:
+        type:
+          type: string
+        status:
+          type: integer
+        title:
+          type: string
+        detail:
+          type: string
+        source:
+          type: string
+    ContactoModel:
+      title: Contacto (Modelo)
+      required:
+      - id
+      - nombre
+      allOf:
+      - $ref: '#/components/schemas/ContactoProjection'
+    ContactoProjection:
+      title: Contacto (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+          description: El 0 actúa como autonumérico en la creación
+          example: 1
+        tratamiento:
+          title: Tratamiento
+          type: string
+          example: Excmo.
+          enum:
+          - Sr.
+          - Sra.
+          - Srta.
+          - Dr.
+          - Dra.
+          - Ilmo.
+          - Ilma.
+          - Excmo.
+          - Excma.
+        nombre:
+          title: Nombre
+          maxLength: 100
+          type: string
+          example: Pietro
+        apellidos:
+          title: Apellidos
+          maxLength: 100
+          type: string
+          example: Woodall
+        telefono:
+          title: Telefono
+          pattern: "^(\\d{3}\\s){2}\\d{3}$"
+          type: string
+          example: 642 051 348
+        email:
+          title: Email
+          maxLength: 100
+          type: string
+          format: email
+          example: pwoodall0@army.mil
+        nif:
+          title: N.I.F.
+          type: string
+          format: nif
+          example: 12345678Z
+        sexo:
+          title: Sexo
+          type: string
+          example: H
+          enum:
+          - H
+          - M
+        nacimiento:
+          title: Nacimiento
+          type: string
+          format: date
+          example: 1963-10-11
+        avatar:
+          title: Avatar
+          maxLength: 200
+          type: string
+          format: uri
+          example: https://randomuser.me/api/portraits/men/0.jpg
+        conflictivo:
+          title: Conflictivo
+          type: boolean
+          example: true
+        icono:
+          title: Icono
+          maxLength: 65000
+          type: string
+          example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALJSURBVDjLpVNbS1RRFP72nHGaUedmpamj5pgKSUli0eXJfOipoELs+hA+FFT44oMSRBkZ1GNC/oAoCJ+C8QaSZhdCTEU0rbyP05jTzOTczv20zkz6IBFBBxZrs9f+vv3t76zFNE3D/3zGjYXa01OuKUqtJstZqizPUnSb6+vDem29o8OpiuIFimZFEOZUQXiY09rq0WtMV6B2d98k8F2YTU4YOKjRCKTw+qQqSZcJFKPoTMty7Nu2pwRKJILY2DjiPv9TIrvGlK6uk5osvjSUl4ERGJIEmEyQlpeRmJpeUkQxaikp3mt2u4FwEPoFcDgR6u1FaHzivpGk3uDy88DiccDnBxQVkGWkFReAO3SgUONFcGYLMDxC71RTF1jTYTt2FIEPw1eMJLOCs9mAuXkqyoBGhxQF+PQFBjvtcwyY+aq7BIhyKgeCYCUqFJ636QSmJIAXAEFIEYhSimTFl1STvFkPjfYEqqmUJRFkpmokg9bJ+Z1MpgKfIICSAutAZcs6mSmMBvLCADLRYCCWfnlmBnDlAbEokCASnqcbhFQW+VRO7lPQX0CpG4GB17qCZyzc3u4mFf2WItdu864cYHIKWAv+bg5lU4V3bYxiFLHQd3CZNqT9zIynx7PLuAceTyg2OPiK9/kPqqEfeWmV+8HSqb8WvSkwue5dHUXIHkbFmQaUXmxETrYVIX6FC0YmFtlGK39rabHTm5pIVqOzqtJqzc8F3r2nNoxiaLkT1Q1NsMwOkLFvALsDAWMRPvYNzbOtszDf0FBNRI8dxYWHd9TWJE3rbzuF449egFWd3jwXvpOLkaGAxv40TJ/r6hxEco+8ue4syGVTC88TR85fsmQseSAk/KCWQ2Sdw/QsVtjfpnGipuYs9Ykr4pp3mqwZtwq2y0ajwYvImoyFVU6ReO02+9dxfnuusDkW9F3lFFakcNoKoZ6c6JPbfgHHGqU/+iLy1wAAAABJRU5ErkJggg=="
+        direcciones:
+          title: Direcciones
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Direccin'
+      additionalProperties: false
+      example:
+        apellidos: Woodall
+        icono: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALJSURBVDjLpVNbS1RRFP72nHGaUedmpamj5pgKSUli0eXJfOipoELs+hA+FFT44oMSRBkZ1GNC/oAoCJ+C8QaSZhdCTEU0rbyP05jTzOTczv20zkz6IBFBBxZrs9f+vv3t76zFNE3D/3zGjYXa01OuKUqtJstZqizPUnSb6+vDem29o8OpiuIFimZFEOZUQXiY09rq0WtMV6B2d98k8F2YTU4YOKjRCKTw+qQqSZcJFKPoTMty7Nu2pwRKJILY2DjiPv9TIrvGlK6uk5osvjSUl4ERGJIEmEyQlpeRmJpeUkQxaikp3mt2u4FwEPoFcDgR6u1FaHzivpGk3uDy88DiccDnBxQVkGWkFReAO3SgUONFcGYLMDxC71RTF1jTYTt2FIEPw1eMJLOCs9mAuXkqyoBGhxQF+PQFBjvtcwyY+aq7BIhyKgeCYCUqFJ636QSmJIAXAEFIEYhSimTFl1STvFkPjfYEqqmUJRFkpmokg9bJ+Z1MpgKfIICSAutAZcs6mSmMBvLCADLRYCCWfnlmBnDlAbEokCASnqcbhFQW+VRO7lPQX0CpG4GB17qCZyzc3u4mFf2WItdu864cYHIKWAv+bg5lU4V3bYxiFLHQd3CZNqT9zIynx7PLuAceTyg2OPiK9/kPqqEfeWmV+8HSqb8WvSkwue5dHUXIHkbFmQaUXmxETrYVIX6FC0YmFtlGK39rabHTm5pIVqOzqtJqzc8F3r2nNoxiaLkT1Q1NsMwOkLFvALsDAWMRPvYNzbOtszDf0FBNRI8dxYWHd9TWJE3rbzuF449egFWd3jwXvpOLkaGAxv40TJ/r6hxEco+8ue4syGVTC88TR85fsmQseSAk/KCWQ2Sdw/QsVtjfpnGipuYs9Ykr4pp3mqwZtwq2y0ajwYvImoyFVU6ReO02+9dxfnuusDkW9F3lFFakcNoKoZ6c6JPbfgHHGqU/+iLy1wAAAABJRU5ErkJggg=="
+        direcciones:
+        - codigo: "29071"
+          calle: 488 Pankratz Junction
+          provincia: Malaga
+          pais: España
+        - codigo: "29071"
+          calle: 488 Pankratz Junction
+          provincia: Malaga
+          pais: España
+        nif: 12345678Z
+        avatar: https://randomuser.me/api/portraits/men/0.jpg
+        nombre: Pietro
+        tratamiento: Excmo.
+        nacimiento: 1963-10-11T00:00:00.000+00:00
+        conflictivo: true
+        id: 1
+        telefono: 642 051 348
+        sexo: H
+        email: pwoodall0@army.mil
+    Contactos:
+      title: Contactos (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/ContactoProjection'
+    ContactosPage:
+      title: Contactos (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Contactos'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    PeliculaModel:
+      title: Pelicula (Modelo)
+      allOf:
+      - $ref: '#/components/schemas/PeliculaProjection'
+    PeliculaProjection:
+      title: Pelicula (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        id:
+          minimum: 0
+          type: integer
+          description: El 0 actúa como autonumérico en la creación
+          format: int32
+      example:
+        id: 0
+    Peliculas:
+      title: Peliculas (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/PeliculaProjection'
+    PeliculasPage:
+      title: Peliculas (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Peliculas'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    PersonaModel:
+      title: Persona (Modelo)
+      required:
+      - id
+      - nombre
+      allOf:
+      - $ref: '#/components/schemas/PersonaProjection'
+    PersonaProjection:
+      title: Persona (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+          description: El 0 actúa como autonumérico en la creación
+          example: 1
+        nombre:
+          title: Nombre
+          type: string
+          example: Pepito
+        apellidos:
+          title: Apellidos
+          type: string
+          example: Grillo
+        correo:
+          title: Correo
+          type: string
+          format: email
+          example: pepito@grillo.tv
+        edad:
+          title: Edad
+          maximum: 67
+          minimum: 16
+          type: integer
+          example: 37
+        telefono:
+          title: Teléfonos
+          uniqueItems: true
+          type: array
+          items:
+            title: Teléfono
+            pattern: "^(\\d{3}\\s){2}\\d{3}$"
+            type: string
+            example: 999 555 555
+      additionalProperties: false
+      example:
+        apellidos: Grillo
+        correo: pepito@grillo.tv
+        id: 1
+        telefono:
+        - 999 555 555
+        - 999 555 555
+        nombre: Pepito
+        edad: 37
+    Personas:
+      title: Personas (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/PersonaProjection'
+    PersonasPage:
+      title: Personas (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Personas'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    TarjetaModel:
+      title: Tarjeta (Modelo)
+      required:
+      - CVC_CVV
+      - caducidad
+      - id
+      - idCliente
+      - numero
+      - tipo
+      allOf:
+      - $ref: '#/components/schemas/TarjetaProjection'
+    TarjetaProjection:
+      title: Tarjeta (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+          description: El 0 actúa como autonumérico en la creación
+          example: 0
+        idCliente:
+          title: IdCliente
+          type: string
+          format: email
+          example: a.auctor.non@dictummi.ca
+        tipo:
+          title: Tipo
+          type: string
+          example: Visa
+        numero:
+          title: Numero
+          pattern: "^(((\\d{4}\\s){3}\\d{4})|(\\d{13}))$"
+          type: string
+          example: 4024 0071 1838 5904
+        caducidad:
+          title: Caducidad
+          pattern: "^\\d{2}\\/\\d{4}$"
+          type: string
+          example: 03/2020
+        CVC_CVV:
+          title: Cvc_cvv
+          type: string
+          example: "147"
+      additionalProperties: false
+      example:
+        caducidad: 03/2020
+        tipo: Visa
+        idCliente: a.auctor.non@dictummi.ca
+        numero: 4024 0071 1838 5904
+        CVC_CVV: "147"
+        id: 0
+    Tarjetas:
+      title: Tarjetas (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/TarjetaProjection'
+    TarjetasPage:
+      title: Tarjetas (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Tarjetas'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    ArticuloModel:
+      title: Articulo (Modelo)
+      required:
+      - id
+      - titulo
+      allOf:
+      - $ref: '#/components/schemas/ArticuloProjection'
+    ArticuloProjection:
+      title: Articulo (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+          description: El 0 actúa como autonumérico en la creación
+          example: 1
+        titulo:
+          title: Titulo
+          maxLength: 200
+          type: string
+          example: Saludo
+        texto:
+          title: Texto
+          type: string
+          example: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores\
+            \ eveniet eum nisi expedita ab dolorum labore similique provident officia\
+            \ ipsa, aliquam recusandae dicta id, praesentium quasi consequatur minus\
+            \ laborum perferendis?"
+        autor:
+          title: Autor
+          maxLength: 200
+          type: string
+          example: Javier
+        fecha:
+          title: Fecha
+          type: string
+          format: date
+          example: 2016-02-29
+        megusta:
+          title: Megusta
+          type: integer
+          example: 0
+        fotourl:
+          title: Fotourl
+          type: string
+          format: uri
+          example: https://cdn-images-1.medium.com/max/800/1*V3Kfghg_jIV0ubxmAnCXBA.jpeg
+      additionalProperties: false
+      example:
+        texto: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores eveniet\
+          \ eum nisi expedita ab dolorum labore similique provident officia ipsa,\
+          \ aliquam recusandae dicta id, praesentium quasi consequatur minus laborum\
+          \ perferendis?"
+        fecha: 2016-02-29T00:00:00.000+00:00
+        fotourl: https://cdn-images-1.medium.com/max/800/1*V3Kfghg_jIV0ubxmAnCXBA.jpeg
+        titulo: Saludo
+        megusta: 0
+        id: 1
+        autor: Javier
+    Blog:
+      title: Blog (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/ArticuloProjection'
+    BlogPage:
+      title: Blog (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Blog'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    LibroModel:
+      title: Libro (Modelo)
+      required:
+      - idLibro
+      - titulo
+      allOf:
+      - $ref: '#/components/schemas/LibroProjection'
+    LibroProjection:
+      title: Libro (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        idLibro:
+          title: Idlibro
+          type: string
+          example: "1"
+        titulo:
+          title: Titulo
+          maxLength: 200
+          type: string
+          example: 'El ingenioso hidalgo don Quijote de la Mancha '
+        autor:
+          title: Autor
+          maxLength: 100
+          type: string
+          example: Miguel de Cervantes
+        pais:
+          title: Pais
+          maxLength: 50
+          type: string
+          example: España
+        fecha:
+          title: Fecha
+          type: string
+          example: "1605"
+        paginas:
+          title: Paginas
+          type: string
+          example: "377"
+        wiki:
+          title: Wiki
+          type: string
+          format: uri
+          example: https://es.wikipedia.org/wiki/Don_Quijote_de_la_Mancha
+      additionalProperties: false
+      example:
+        fecha: "1605"
+        paginas: "377"
+        idLibro: "1"
+        wiki: https://es.wikipedia.org/wiki/Don_Quijote_de_la_Mancha
+        titulo: 'El ingenioso hidalgo don Quijote de la Mancha '
+        autor: Miguel de Cervantes
+        pais: España
+    Libros:
+      title: Libros (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/LibroProjection'
+    LibrosPage:
+      title: Libros (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Libros'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    VolumenModel:
+      title: Volumen (Modelo)
+      required:
+      - autor
+      - id
+      - titulo
+      allOf:
+      - $ref: '#/components/schemas/VolumenProjection'
+    VolumenProjection:
+      title: Volumen (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+          description: El 0 actúa como autonumérico en la creación
+          example: 0
+        titulo:
+          title: Titulo
+          maxLength: 100
+          type: string
+          example: Mauris
+        autor:
+          title: Autor
+          maxLength: 100
+          type: string
+          example: At Mi Imperdiet
+        numPag:
+          title: Número de páginas
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+          example: 22
+      additionalProperties: false
+      example:
+        numPag: 22
+        titulo: Mauris
+        id: 0
+        autor: At Mi Imperdiet
+    Biblioteca:
+      title: Biblioteca (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/VolumenProjection'
+    BibliotecaPage:
+      title: Biblioteca (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Biblioteca'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    VehiculoModel:
+      title: Vehiculo (Modelo)
+      required:
+      - id
+      - marca
+      - matricula
+      - modelo
+      allOf:
+      - $ref: '#/components/schemas/VehiculoProjection'
+    VehiculoProjection:
+      title: Vehiculo (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+          description: El 0 actúa como autonumérico en la creación
+          example: 1
+        marca:
+          title: Marca
+          type: string
+          example: AUDI
+        modelo:
+          title: Modelo
+          type: string
+          example: A3
+        matricula:
+          title: Matricula
+          type: string
+          example: 1234ABC
+        edad:
+          title: Edad
+          type: integer
+          example: 2
+        propietario:
+          $ref: '#/components/schemas/Propietario'
+        direcciones:
+          title: Direcciones
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Direccin_1'
+      additionalProperties: false
+      example:
+        marca: AUDI
+        propietario:
+          apellidos: Glamour
+          nombre: Penélope
+          dni: 12345678Z
+          email: pglamour@example.com
+        direcciones:
+        - calle: Compact Pussycat
+          localidad: Rota
+          id: 1
+          provincia: 11
+          cp: "11080"
+        - calle: Compact Pussycat
+          localidad: Rota
+          id: 1
+          provincia: 11
+          cp: "11080"
+        matricula: 1234ABC
+        id: 1
+        modelo: A3
+        edad: 2
+    Vehiculos:
+      title: Vehiculos (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/VehiculoProjection'
+    VehiculosPage:
+      title: Vehiculos (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Vehiculos'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    MarcaModel:
+      title: Marca (Modelo)
+      required:
+      - marca
+      - modelos
+      allOf:
+      - $ref: '#/components/schemas/MarcaProjection'
+    MarcaProjection:
+      title: Marca (Proyección)
+      minProperties: 1
+      type: object
+      properties:
+        marca:
+          title: Marca
+          type: string
+          example: ALFA ROMEO
+        modelos:
+          title: Modelos
+          uniqueItems: true
+          type: array
+          items:
+            title: Modelo
+            type: string
+            example: Giulietta
+      additionalProperties: false
+      example:
+        marca: ALFA ROMEO
+        modelos:
+        - Giulietta
+        - Giulietta
+    Marcas:
+      title: Marcas (Listado)
+      type: array
+      items:
+        $ref: '#/components/schemas/MarcaProjection'
+    MarcasPage:
+      title: Marcas (Página)
+      type: object
+      properties:
+        content:
+          $ref: '#/components/schemas/Marcas'
+        totalElements:
+          type: integer
+          description: Número total de elementos
+        totalPages:
+          type: integer
+          description: Número total de páginas
+        size:
+          type: integer
+          description: Tamaño de página en elementos
+        number:
+          type: integer
+          description: Número de página actual
+        numberOfElements:
+          type: integer
+          description: Número total de elementos en la página
+        empty:
+          type: boolean
+          description: Si la página está vacía
+        first:
+          type: boolean
+          description: Si la página es la primera
+        last:
+          type: boolean
+          description: Si la página es la última
+    Login:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+      description: Credenciales de autenticación
+    RespuestaLogin:
+      title: Respuesta Login
+      type: object
+      properties:
+        success:
+          type: boolean
+        token:
+          type: string
+        refresh:
+          type: string
+        name:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+        expires_in:
+          type: integer
+          format: int32
+      example:
+        success: true
+        roles:
+        - roles
+        - roles
+        name: name
+        refresh: refresh
+        expires_in: 0
+        token: token
+    RefreshToken:
+      title: Token de petición de refresco
+      type: object
+      properties:
+        token:
+          type: string
+    _page:
+      oneOf:
+      - minimum: 0
+        type: integer
+      - type: string
+        enum:
+        - count
+        - COUNT
+    inline_response_200:
+      oneOf:
+      - $ref: '#/components/schemas/Contactos'
+      - $ref: '#/components/schemas/ContactosPage'
+    inline_response_200_1:
+      oneOf:
+      - $ref: '#/components/schemas/Peliculas'
+      - $ref: '#/components/schemas/PeliculasPage'
+    inline_response_200_2:
+      oneOf:
+      - $ref: '#/components/schemas/Personas'
+      - $ref: '#/components/schemas/PersonasPage'
+    inline_response_200_3:
+      oneOf:
+      - $ref: '#/components/schemas/Tarjetas'
+      - $ref: '#/components/schemas/TarjetasPage'
+    inline_response_200_4:
+      oneOf:
+      - $ref: '#/components/schemas/Blog'
+      - $ref: '#/components/schemas/BlogPage'
+    inline_response_200_5:
+      oneOf:
+      - $ref: '#/components/schemas/Libros'
+      - $ref: '#/components/schemas/LibrosPage'
+    inline_response_200_6:
+      oneOf:
+      - $ref: '#/components/schemas/Biblioteca'
+      - $ref: '#/components/schemas/BibliotecaPage'
+    inline_response_200_7:
+      oneOf:
+      - $ref: '#/components/schemas/Vehiculos'
+      - $ref: '#/components/schemas/VehiculosPage'
+    inline_response_200_8:
+      oneOf:
+      - $ref: '#/components/schemas/Marcas'
+      - $ref: '#/components/schemas/MarcasPage'
+    login_body:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Usuario
+        password:
+          type: string
+          description: Contraseña
+          format: password
+    inline_response_200_9:
+      type: object
+      properties:
+        idUsuario:
+          type: string
+          format: email
+        nombre:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+      example:
+        idUsuario: ""
+        roles:
+        - roles
+        - roles
+        nombre: nombre
+    register_body:
+      required:
+      - nombre
+      type: object
+      properties:
+        nombre:
+          type: string
+    register_body_1:
+      type: object
+      properties:
+        idUsuario:
+          type: string
+          format: email
+        nombre:
+          type: string
+        password:
+          type: string
+          format: password
+    inline_response_200_10:
+      type: object
+      properties:
+        isAuthenticated:
+          type: boolean
+        usr:
+          type: string
+        name:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+      example:
+        usr: usr
+        roles:
+        - roles
+        - roles
+        name: name
+        isAuthenticated: true
+    register_password_body:
+      type: object
+      properties:
+        oldPassword:
+          type: string
+          format: password
+        newPassword:
+          type: string
+          format: password
+    Direccin:
+      title: Dirección
+      required:
+      - calle
+      - codigo
+      - pais
+      - provincia
+      type: object
+      properties:
+        calle:
+          title: Calle
+          maxLength: 500
+          type: string
+          example: 488 Pankratz Junction
+        codigo:
+          title: Código Postal
+          pattern: "^\\d{4,5}$"
+          type: string
+          example: "29071"
+        provincia:
+          title: Provincia
+          maxLength: 100
+          type: string
+          example: Malaga
+        pais:
+          title: Pais
+          maxLength: 100
+          type: string
+          example: España
+      example:
+        codigo: "29071"
+        calle: 488 Pankratz Junction
+        provincia: Malaga
+        pais: España
+    Propietario:
+      title: Propietario
+      required:
+      - apellidos
+      - dni
+      - email
+      - nombre
+      type: object
+      properties:
+        nombre:
+          title: Nombre
+          type: string
+          example: Penélope
+        apellidos:
+          title: Apellidos
+          type: string
+          example: Glamour
+        dni:
+          title: Dni
+          type: string
+          format: nif
+          example: 12345678Z
+        email:
+          title: Email
+          type: string
+          format: email
+          example: pglamour@example.com
+      example:
+        apellidos: Glamour
+        nombre: Penélope
+        dni: 12345678Z
+        email: pglamour@example.com
+    Direccin_1:
+      title: Dirección
+      required:
+      - calle
+      - cp
+      - id
+      - localidad
+      - provincia
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+          example: 1
+        calle:
+          title: Calle
+          type: string
+          example: Compact Pussycat
+        localidad:
+          title: Localidad
+          type: string
+          example: Rota
+        cp:
+          title: Cp
+          type: string
+          example: "11080"
+        provincia:
+          title: Provincia
+          type: integer
+          example: 11
+      example:
+        calle: Compact Pussycat
+        localidad: Rota
+        id: 1
+        provincia: 11
+        cp: "11080"
+  responses:
+    Created:
+      description: Created
+      headers:
+        location:
+          description: URL al elemento recién creado
+          style: simple
+          explode: false
+          schema:
+            type: string
+            format: uri
+    NoContent:
+      description: No content
+    BadRequest:
+      description: Invalid data
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorMessage'
+  parameters:
+    pagina:
+      name: _page
+      in: query
+      description: Número de página empezando en 0 (primera página).
+      required: false
+      style: form
+      explode: true
+      schema:
+        $ref: '#/components/schemas/_page'
+    filas:
+      name: _rows
+      in: query
+      description: "Número de filas por página, por defecto 20 si se omite pero aparece\
+        \ el parámetro *_page*."
+      required: false
+      style: form
+      explode: true
+      schema:
+        minimum: 0
+        type: integer
+    ordenar:
+      name: _sort
+      in: query
+      description: "Indica la lista de propiedades (separadas por comas) por la que\
+        \ se ordenaran los resultados, en caso de omitirse se utilizará la propiedad\
+        \ que actúa como primary key. Si el nombre de la propiedad está precedido\
+        \ por un guion (signo negativo) la ordenación será descendente."
+      required: false
+      style: form
+      explode: true
+      allowReserved: true
+      schema:
+        type: string
+    buscar:
+      name: _search
+      in: query
+      description: Selecciona todos aquellos que en alguna de sus propiedades contenga
+        el valor proporcionado.
+      required: false
+      style: form
+      explode: true
+      allowReserved: true
+      schema:
+        type: string
+    proyeccion:
+      name: _projection
+      in: query
+      description: "Devuelve solo aquellas propiedades de la lista suministrada, los\
+        \ nombres de las propiedades deben ir separadas por comas."
+      required: false
+      style: form
+      explode: true
+      allowReserved: true
+      schema:
+        type: string
+  requestBodies: {}
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    cookieAuth:
+      type: apiKey
+      name: Authorization
+      in: cookie

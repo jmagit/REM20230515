@@ -1,0 +1,155 @@
+openapi: 3.0.0
+info:
+  title: Demo de la documentación 
+  version: 1.0.0
+servers:
+  - url: http://localhost:4422
+tags:
+- name: security-resource
+  description: Gestión de la **seguridad**
+- name: alumnos-resource
+  description: Gestión de los alumnos
+
+paths:
+  /api/alumnos:
+    get:
+      tags:
+        - security-resource
+        - alumnos-resource
+      parameters:
+        - name: page
+          in: query
+          description: Specifies the page number of the users to be displayed
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: rows
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: integer
+            minimum: 1
+            default: 20
+      responses:
+        '200':
+          description: Lista de alumnos
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/PersonaShort'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PersonaShort'
+
+    post:
+      tags:
+      - alumnos-resource
+      requestBody:
+        content:
+            application/json:
+              schema:
+                type: object 
+                properties:
+                  id:
+                    type: integer
+                  nombre:
+                    type: string
+                    maxLength: 50
+                    example: Pepito
+                  apellidos:
+                    type: string
+                    maxLength: 50
+                    example: Grillo
+                required:
+                  - "id"
+      responses:
+        '201':
+          description: Lista de alumnos
+  /usuarios:
+    get:
+      parameters:
+        - $ref: "#/components/parameters/pagina"
+        - $ref: "#/components/parameters/filas"
+      responses:
+        '200':
+          description: Lista de alumnos
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Roles'
+
+components:
+  schemas:
+    PersonaShort:
+      type: object 
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+    Roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rol'
+    Rol:
+      type: object
+      description: Roles de usuario
+      properties:
+        rolId:
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 255
+        name:
+          type: string
+          maxLength: 20
+        description:
+          type: string
+        last_updated:
+          type: string
+          format: dateTime
+          readOnly: true
+        level:
+            type: string
+            description: Nivel de permisos
+            enum:
+            - high
+            - normal
+            - low
+            default: normal
+      required: 
+      - rolId
+      - name
+  parameters:
+    pagina:
+      in: query
+      name: _page
+      description: Número de página empezando en 0 (primera página).
+      required: false
+      schema:
+        oneOf:
+          - type: integer
+            minimum: 0
+          - type: string
+            enum:
+              - count
+              - COUNT
+    filas:
+      in: query
+      name: _rows
+      description: Número de filas por página, por defecto 20 si se omite pero aparece
+        el parámetro *_page*.
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+
+  #   get:
+  #     tags:
+  #     - alumnos-resource
+  # /api/alumnos/{id}:
+  #   get:
+  #     tags:
+  #     - alumnos-resource
+  #     - kk
