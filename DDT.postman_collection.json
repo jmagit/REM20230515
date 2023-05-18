@@ -1,0 +1,84 @@
+{
+	"info": {
+		"_postman_id": "54f55f45-4ff7-4e3f-849c-f1691bfeb266",
+		"name": "DDT",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8273928",
+		"_collection_link": "https://www.postman.com/red-flare-4265/workspace/cursov/collection/8273928-54f55f45-4ff7-4e3f-849c-f1691bfeb266?action=share&creator=8273928&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Parametrizado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(`Content-Type is ${pm.iterationData.get(\"content-type\")}`, function () {\r",
+							"    pm.response.to.have.header(\"Content-Type\", pm.iterationData.get(\"content-type\"));\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status code is \" + pm.iterationData.get(\"status\"), function () {\r",
+							"    pm.response.to.have.status(+pm.iterationData.get(\"status\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "{{accept}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{url-base}}/{{ruta}}",
+					"host": [
+						"{{url-base}}"
+					],
+					"path": [
+						"{{ruta}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ruta",
+			"value": "api/personas",
+			"type": "string"
+		},
+		{
+			"key": "accept",
+			"value": "application/json",
+			"type": "string"
+		}
+	]
+}
