@@ -40,7 +40,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/APIResources'
-  /servidores:
+  /servidores/v1:
     get:
       tags:
         - server-api
@@ -94,7 +94,7 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
-  "/servidores/{id}":
+  "/servidores/v1/{id}":
     parameters:
       - name: id
         in: path
