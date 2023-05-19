@@ -1,0 +1,1480 @@
+{
+	"info": {
+		"_postman_id": "78ebf43f-7cf0-4fac-b0ef-49f0ce36ecc5",
+		"name": "Server API REST",
+		"description": "Api que permite la gestión de servidores\n\nContact Support:\n Name: Javier Martín\n Email: support@example.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8273928",
+		"_collection_link": "https://www.postman.com/red-flare-4265/workspace/cursov/collection/8273928-78ebf43f-7cf0-4fac-b0ef-49f0ce36ecc5?action=share&creator=8273928&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "servidores",
+			"item": [
+				{
+					"name": "{id}",
+					"item": [
+						{
+							"name": "Recuperar servidor",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/servidores/:id?_projection=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores",
+										":id"
+									],
+									"query": [
+										{
+											"key": "_projection",
+											"value": "<string>",
+											"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id?_projection=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"query": [
+												{
+													"key": "_projection",
+													"value": "<string>",
+													"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+												}
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}"
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id?_projection=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"query": [
+												{
+													"key": "_projection",
+													"value": "<string>",
+													"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+												}
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id?_projection=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"query": [
+												{
+													"key": "_projection",
+													"value": "<string>",
+													"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+												}
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								},
+								{
+									"name": "Not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id?_projection=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"query": [
+												{
+													"key": "_projection",
+													"value": "<string>",
+													"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+												}
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Reemplazar servidor",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/servidores/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}"
+								},
+								{
+									"name": "Invalid data",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								},
+								{
+									"name": "Not found",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Sondeo CORS",
+							"request": {
+								"method": "OPTIONS",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/servidores/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "OK",
+									"originalRequest": {
+										"method": "OPTIONS",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "OPTIONS",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "OPTIONS",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Borrar servidor",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/servidores/:id",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "<integer>"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "No content",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "No Content",
+									"code": 204,
+									"_postman_previewlanguage": "text",
+									"header": [],
+									"cookie": [],
+									"body": ""
+								},
+								{
+									"name": "Unauthorized",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Unauthorized",
+									"code": 401,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								},
+								{
+									"name": "Forbidden",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Forbidden",
+									"code": 403,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								},
+								{
+									"name": "Not found",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/servidores/:id",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"servidores",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id"
+												}
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Listar servidores",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/servidores?_page=<integer>&_rows=<integer>&_sort=<string>&_search=<string>&_projection=<string>",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"servidores"
+							],
+							"query": [
+								{
+									"key": "_page",
+									"value": "<integer>",
+									"description": "Número de página empezando en 0 (primera página)."
+								},
+								{
+									"key": "_rows",
+									"value": "<integer>",
+									"description": "Número de filas por página, por defecto 20 si se omite pero aparece el parámetro *_page*."
+								},
+								{
+									"key": "_sort",
+									"value": "<string>",
+									"description": "Indica la lista de propiedades (separadas por comas) por la que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad que actúa como primary key. Si el nombre de la propiedad está precedido por un guion (signo negativo) la ordenación será descendente."
+								},
+								{
+									"key": "_search",
+									"value": "<string>",
+									"description": "Selecciona todos aquellos que en alguna de sus propiedades contenga el valor proporcionado."
+								},
+								{
+									"key": "_projection",
+									"value": "<string>",
+									"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/servidores?_page=<integer>&_rows=<integer>&_sort=<string>&_search=<string>&_projection=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									],
+									"query": [
+										{
+											"key": "_page",
+											"value": "<integer>",
+											"description": "Número de página empezando en 0 (primera página)."
+										},
+										{
+											"key": "_rows",
+											"value": "<integer>",
+											"description": "Número de filas por página, por defecto 20 si se omite pero aparece el parámetro *_page*."
+										},
+										{
+											"key": "_sort",
+											"value": "<string>",
+											"description": "Indica la lista de propiedades (separadas por comas) por la que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad que actúa como primary key. Si el nombre de la propiedad está precedido por un guion (signo negativo) la ordenación será descendente."
+										},
+										{
+											"key": "_search",
+											"value": "<string>",
+											"description": "Selecciona todos aquellos que en alguna de sus propiedades contenga el valor proporcionado."
+										},
+										{
+											"key": "_projection",
+											"value": "<string>",
+											"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "[\n  {\n    \"serverId\": \"<number>\",\n    \"domain\": \"<string>\"\n  },\n  {\n    \"serverId\": \"<number>\",\n    \"domain\": \"<string>\"\n  }\n]"
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/servidores?_page=<integer>&_rows=<integer>&_sort=<string>&_search=<string>&_projection=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									],
+									"query": [
+										{
+											"key": "_page",
+											"value": "<integer>",
+											"description": "Número de página empezando en 0 (primera página)."
+										},
+										{
+											"key": "_rows",
+											"value": "<integer>",
+											"description": "Número de filas por página, por defecto 20 si se omite pero aparece el parámetro *_page*."
+										},
+										{
+											"key": "_sort",
+											"value": "<string>",
+											"description": "Indica la lista de propiedades (separadas por comas) por la que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad que actúa como primary key. Si el nombre de la propiedad está precedido por un guion (signo negativo) la ordenación será descendente."
+										},
+										{
+											"key": "_search",
+											"value": "<string>",
+											"description": "Selecciona todos aquellos que en alguna de sus propiedades contenga el valor proporcionado."
+										},
+										{
+											"key": "_projection",
+											"value": "<string>",
+											"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+										}
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+						},
+						{
+							"name": "Forbidden",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/servidores?_page=<integer>&_rows=<integer>&_sort=<string>&_search=<string>&_projection=<string>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									],
+									"query": [
+										{
+											"key": "_page",
+											"value": "<integer>",
+											"description": "Número de página empezando en 0 (primera página)."
+										},
+										{
+											"key": "_rows",
+											"value": "<integer>",
+											"description": "Número de filas por página, por defecto 20 si se omite pero aparece el parámetro *_page*."
+										},
+										{
+											"key": "_sort",
+											"value": "<string>",
+											"description": "Indica la lista de propiedades (separadas por comas) por la que se ordenaran los resultados, en caso de omitirse se utilizará la propiedad que actúa como primary key. Si el nombre de la propiedad está precedido por un guion (signo negativo) la ordenación será descendente."
+										},
+										{
+											"key": "_search",
+											"value": "<string>",
+											"description": "Selecciona todos aquellos que en alguna de sus propiedades contenga el valor proporcionado."
+										},
+										{
+											"key": "_projection",
+											"value": "<string>",
+											"description": "Devuelve solo aquellas propiedades de la lista suministrada, los nombres de las propiedades deben ir separadas por comas."
+										}
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Crear servidor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+							"options": {
+								"raw": {
+									"headerFamily": "json",
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/servidores",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"servidores"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Created",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/servidores",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "location",
+									"value": "<uri>",
+									"description": {
+										"content": "URL al elemento recién creado",
+										"type": "text/plain"
+									}
+								}
+							],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Invalid data",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/servidores",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/servidores",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+						},
+						{
+							"name": "Forbidden",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"serverId\": \"<number>\",\n  \"domain\": \"<string>\",\n  \"description\": \"<string>\",\n  \"ip\": \"<ipv4>\",\n  \"mac\": \"<string>\",\n  \"notify\": \"<email>\",\n  \"country\": \"<string>\",\n  \"last_updated\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/servidores",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Sondeo CORS",
+					"request": {
+						"method": "OPTIONS",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/servidores",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"servidores"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "OPTIONS",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/servidores",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						},
+						{
+							"name": "Unauthorized",
+							"originalRequest": {
+								"method": "OPTIONS",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/servidores",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+						},
+						{
+							"name": "Forbidden",
+							"originalRequest": {
+								"method": "OPTIONS",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/servidores",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"servidores"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"type\": \"<string>\",\n  \"status\": \"<integer>\",\n  \"title\": \"<string>\",\n  \"detail\": \"<string>\",\n  \"source\": \"<string>\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "/",
+			"item": [
+				{
+					"name": "/",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "OK",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "text",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "*/*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n  \"get_links\": {\n    \"self\": {\n      \"href\": \"<string>\"\n    },\n    \"servidores\": {\n      \"href\": \"<string>\"\n    }\n  }\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "protocol",
+			"value": "http"
+		},
+		{
+			"key": "port",
+			"value": "8080"
+		},
+		{
+			"key": "baseUrl",
+			"value": "{{protocol}}://localhost:{{port}}"
+		}
+	]
+}

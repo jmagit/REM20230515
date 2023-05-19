@@ -1,0 +1,209 @@
+{
+	"info": {
+		"_postman_id": "f6931321-3a84-494a-8b19-a70417cbc9c1",
+		"name": "Libros",
+		"description": "Demos de personas ....",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8273928",
+		"_collection_link": "https://www.postman.com/red-flare-4265/workspace/cursov/collection/8273928-f6931321-3a84-494a-8b19-a70417cbc9c1?action=share&creator=8273928&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "401",
+			"item": [
+				{
+					"name": "Todos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url-base}}/{{ruta}}",
+							"host": [
+								"{{url-base}}"
+							],
+							"path": [
+								"{{ruta}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Uno",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url-base}}/{{ruta}}/999",
+							"host": [
+								"{{url-base}}"
+							],
+							"path": [
+								"{{ruta}}",
+								"999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Añadir",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"idLibro\": \"0\", \"titulo\": \"\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url-base}}/{{ruta}}",
+							"host": [
+								"{{url-base}}"
+							],
+							"path": [
+								"{{ruta}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modificar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"idLibro\": \"0\", \"titulo\": \"\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url-base}}/{{ruta}}/0",
+							"host": [
+								"{{url-base}}"
+							],
+							"path": [
+								"{{ruta}}",
+								"0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url-base}}/{{ruta}}/0",
+							"host": [
+								"{{url-base}}"
+							],
+							"path": [
+								"{{ruta}}",
+								"0"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is 401\", function () {",
+							"    pm.response.to.be.unauthorized;",
+							"});",
+							"pm.test(\"Error details is Unauthorized\", function () {",
+							"    pm.expect(pm.response.text()).to.equal('{\"type\":\"ApplicationError\",\"status\":401,\"title\":\"Unauthorized\"}');",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "GET All",
+			"item": []
+		},
+		{
+			"name": "GET One",
+			"item": []
+		},
+		{
+			"name": "POST",
+			"item": [
+				{
+					"name": "OK",
+					"item": []
+				},
+				{
+					"name": "KO",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "PUT",
+			"item": [
+				{
+					"name": "OK",
+					"item": []
+				},
+				{
+					"name": "KO",
+					"item": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ruta",
+			"value": "api/libros",
+			"type": "string"
+		}
+	]
+}

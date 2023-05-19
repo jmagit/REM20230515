@@ -1,0 +1,21 @@
+{
+	"id": "5f5a68d1-4821-4fe0-88da-f996c90682dd",
+	"values": [
+		{
+			"key": "Autor",
+			"value": "Yo mismo",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "sla",
+			"value": "10",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2023-05-19T11:52:02.070Z",
+	"_postman_exported_using": "Postman/10.14.2"
+}
