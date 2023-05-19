@@ -342,7 +342,6 @@ components:
         notify: lantognetti9@drupal.org
         country: NO
         last_updated: 2023-05-07T19:33:43Z
-
     servidor-minimo:
       title: Breve detalle del servidor
       type: object
